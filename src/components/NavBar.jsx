@@ -23,7 +23,7 @@ const NavBar = () => {
             > */}
             <button onClick={() => navigate('/buy') } className="cursor-pointer flex items-center gap-2 bg-blue-100 px-4 sm:px-6 
             py-1.5 sm:py-3 rounded-full">
-              <img src={assets.credit_star} alt="" className="w-5" />
+              <img src={assets.credit_star} alt="star" className="w-5" />
               <p className="text-xs sm:text-sm font-medium text-gray-600">Credit Left: 10</p>
             </button>
             <p className="text-gray-600 max-sm:hidden pl-4">Hi, Muthu </p>
