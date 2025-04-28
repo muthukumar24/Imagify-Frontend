@@ -1,13 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { assets } from "../assets/assets";
 
 const Result = () => {
+
+  const [image, setImage] = useState(assets.sample_img_1);
+
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+
   return (
     <form className="flex flex-col justify-center items-center min-h-[90vh]">
       <div>
         <div className="relative">
           <img
-            src={assets.sample_img_1}
+            src={image}
             alt="image"
             className="w-100 h-100 max-w-sm rounded"
           />
@@ -44,7 +49,7 @@ const Result = () => {
         text-black px-8 py-3 rounded-full cursor-pointer">
           Generate Another
         </p>
-        <a href="" download className="bg-zinc-900 px-10 py-3 rounded-full cursor-pointer">Download</a>
+        <a href={image} download className="bg-zinc-900 px-10 py-3 rounded-full cursor-pointer">Download</a>
       </div>
     </form>
   );
