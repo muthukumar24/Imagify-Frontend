@@ -1,9 +1,14 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import { motion } from 'motion/react'
 
 const GenerateButton = () => {
   return (
-    <div className='pb-16 text-center'>
+    <motion.div className='pb-16 text-center'
+    initial={{ opacity: 0.2, y: 100}}
+    transition={{ duration: 1 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}>
         <h1 className='text-2xl md:text-3xl lg:text-4xl 
         mt-4 font-semibold text-neutral-800 py-6 
         md:py-16'>
@@ -17,7 +22,7 @@ const GenerateButton = () => {
             <img src={assets.star_group} alt=""
             className='h-6' />
         </button>
-    </div>
+    </motion.div>
   )
 }
 
