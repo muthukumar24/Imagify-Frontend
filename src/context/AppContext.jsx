@@ -6,8 +6,14 @@ const AppContextProvider = ({children}) => {
 
     const [user, setUser] = useState(null);
     const [showLogin, setShowLogin] = useState(false);
+    const [token, setToken] = useState(localStorage.getItem('token'));
+    const [credit, setCredit] = useState(false);
 
-    const value = { user, setUser, showLogin, setShowLogin };
+    const value = { 
+        user, setUser, showLogin, 
+        setShowLogin, token, setToken, 
+        credit, setCredit
+    };
 
     return (
         <AppContext.Provider value={value}>

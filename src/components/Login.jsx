@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { use, useContext, useEffect, useState } from 'react'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext';
 import { motion } from 'motion/react';
@@ -8,6 +8,10 @@ const Login = () => {
 
     const [state, setState] = useState("Login");
     const { setShowLogin } = useContext(AppContext);
+
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
     useEffect(() => {
         document.body.style.overflow = 'hidden';
@@ -36,7 +40,10 @@ const Login = () => {
             {state !== 'Login' && <div className='border px-5 py-2 flex items-center gap-2 
             rounded-full mt-5'>
                 <img width={23} src={assets.profile_icon} alt="icon" />
-                <input type="text" 
+                <input 
+                type="text" 
+                value={name}
+                onChange={(e) => setName(e.target.value)}
                 className='outline-none text-sm'
                 placeholder='Full Name' required />
             </div>}
@@ -44,7 +51,10 @@ const Login = () => {
             <div className='border px-6 py-2 flex items-center gap-2 
             rounded-full mt-4'>
                 <img src={assets.email_icon} alt="icon" />
-                <input type="email" 
+                <input 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                type="email" 
                 className='outline-none text-sm'
                 placeholder='Email' required />
             </div>
@@ -52,7 +62,10 @@ const Login = () => {
             <div className='border px-6 py-2 flex items-center gap-2 
             rounded-full mt-4'>
                 <img src={assets.lock_icon} alt="icon" />
-                <input type="password" 
+                <input 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password" 
                 className='outline-none text-sm'
                 placeholder='Password' required />
             </div>
