@@ -2,10 +2,65 @@ import React, { useContext } from 'react'
 import { assets, plans } from '../assets/assets'
 import { AppContext } from '../context/AppContext';
 import { motion } from 'motion/react';
+import { API_URL } from '../constants/api';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const BuyCredit = () => {
 
-  const { user } = useContext(AppContext);
+  const { user, loadCreditsData, token, setShowLogin } = useContext(AppContext);
+
+  const navigate = useNavigate();
+
+  const initPay = async (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: 'Credits Payment',
+      description: 'Credits Payment',
+      order_id: order.id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        try {
+          const { data } = await axios.post(`${API_URL}/api/user/verify-razor`, 
+            response,
+            { headers: {token}});
+          if(data.success){
+            loadCreditsData();
+            navigate('/');
+            toast.success('Credits Added');
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+    }
+
+    const rzp = new window.Razorpay(options)
+    rzp.open()
+  }
+
+  const paymentRazorPay = async (planId) => {
+    try {
+      if(!user){
+        setShowLogin(true);
+      }
+
+      const { data } = await axios.post(`${API_URL}/api/user/par-razor`, 
+        {planId}, 
+        {headers: { token }}
+      );
+
+      if(data.success){
+        initPay(data.order)
+      }
+
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
 
   return (
     <motion.div 
@@ -31,7 +86,9 @@ const BuyCredit = () => {
               <p className='mt-6'>
                 <span className='text-3xl font-medium'>₹ {item.price}</span> / {item.credits} credits
               </p>
-              <button className='cursor-pointer w-full bg-gray-800 text-white mt-8
+              <button 
+              onClick={() => paymentRazorPay(item.id)}
+              className='cursor-pointer w-full bg-gray-800 text-white mt-8
               text-sm rounded-md py-2.5 min-w-52'>
                 {
                   user ? "Purchase" : "Get Started"
