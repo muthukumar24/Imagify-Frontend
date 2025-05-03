@@ -2,6 +2,7 @@ import axios from "axios";
 import { createContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { API_URL } from "../constants/api";
+import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -11,6 +12,8 @@ const AppContextProvider = ({children}) => {
     const [showLogin, setShowLogin] = useState(false);
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [credit, setCredit] = useState(false);
+
+    const navigate = useNavigate();
 
     const loadCreditsData = async () => {
         try {
@@ -23,6 +26,26 @@ const AppContextProvider = ({children}) => {
             }
         } catch (error) {
             console.log(error);
+            toast.error(error.message);
+        }
+    }
+
+    const generateImage = async (prompt) => {
+        try {
+            const { data } = await axios.post(`${API_URL}/api/image/generate-image`, 
+                {prompt}, {headers: {token}});
+            if(data.success){
+                loadCreditsData();
+                return data.resultImage
+            }
+            else{
+                toast.error(data.message);
+                loadCreditsData();
+                if(data.creditBalance === 0){
+                    navigate('/buy');
+                }
+            }
+        } catch (error) {
             toast.error(error.message);
         }
     }
@@ -43,7 +66,7 @@ const AppContextProvider = ({children}) => {
         user, setUser, showLogin, 
         setShowLogin, token, setToken, 
         credit, setCredit, loadCreditsData,
-        logout
+        logout, generateImage
     };
 
     return (
