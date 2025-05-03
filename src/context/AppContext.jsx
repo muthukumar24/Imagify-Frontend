@@ -1,4 +1,7 @@
-import { createContext, useState } from "react";
+import axios from "axios";
+import { createContext, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { API_URL } from "../constants/api";
 
 export const AppContext = createContext();
 
@@ -9,10 +12,31 @@ const AppContextProvider = ({children}) => {
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [credit, setCredit] = useState(false);
 
+    const loadCreditsData = async () => {
+        try {
+            const { data } = await axios.get(`${API_URL}/api/user/credits`, 
+                {headers: {token}});
+
+            if(data.success) {
+                setCredit(data.credits);
+                setUser(data.user);
+            }
+        } catch (error) {
+            console.log(error);
+            toast.error(error.message);
+        }
+    }
+
+    useEffect(() => {
+        if(token) {
+            loadCreditsData();
+        }
+    }, [token]);
+
     const value = { 
         user, setUser, showLogin, 
         setShowLogin, token, setToken, 
-        credit, setCredit
+        credit, setCredit, loadCreditsData
     };
 
     return (
